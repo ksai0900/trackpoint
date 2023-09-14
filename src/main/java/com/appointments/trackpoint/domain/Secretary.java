@@ -40,6 +40,6 @@ public class Secretary {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true)
-    private User user;
+    private AppUser appUser;
 
 }

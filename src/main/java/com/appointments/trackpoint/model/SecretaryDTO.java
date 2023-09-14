@@ -14,6 +14,6 @@ public class SecretaryDTO {
     @Size(max = 255)
     private String name;
 
-    private Long user;
+    private Long appUser;
 
 }

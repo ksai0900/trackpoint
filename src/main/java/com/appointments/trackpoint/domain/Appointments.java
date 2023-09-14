@@ -50,4 +50,7 @@ public class Appointments {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @Column
+    private boolean confirmed;
+
 }

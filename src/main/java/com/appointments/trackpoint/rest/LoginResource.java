@@ -1,16 +1,18 @@
 package com.appointments.trackpoint.rest;
 
-import com.appointments.trackpoint.model.LoginDTO;
+import com.appointments.trackpoint.domain.AppUser;
+import com.appointments.trackpoint.model.AuthUserDTO;
+import com.appointments.trackpoint.model.LoginDTOApp;
 import com.appointments.trackpoint.service.LoginService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api/login", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
+
 public class LoginResource {
 
     private final LoginService loginService;
@@ -19,8 +21,13 @@ public class LoginResource {
         this.loginService = loginService;
     }
 
-    @PostMapping
-    public ResponseEntity login(@RequestBody final LoginDTO loginDTO) {
-        return ResponseEntity.ok(loginService.login(loginDTO.getUsername(), loginDTO.getPassword()));
+    @PostMapping("/login")
+    public ResponseEntity<AuthUserDTO> login(@RequestBody final LoginDTOApp loginDTO, HttpServletResponse response) {
+        AuthUserDTO appUser = loginService.login(loginDTO.getUsername(), loginDTO.getPassword(), loginDTO.getRole(), response);
+        if (appUser != null) {
+            return ResponseEntity.ok().body(appUser);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

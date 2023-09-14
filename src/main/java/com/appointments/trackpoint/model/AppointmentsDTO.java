@@ -22,5 +22,6 @@ public class AppointmentsDTO {
     private Long doctor;
 
     private Long customer;
+    private boolean confirmed;
 
 }

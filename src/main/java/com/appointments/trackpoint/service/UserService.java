@@ -1,8 +1,8 @@
 package com.appointments.trackpoint.service;
 
-import com.appointments.trackpoint.domain.User;
-import com.appointments.trackpoint.model.UserDTO;
-import com.appointments.trackpoint.repos.UserRepository;
+import com.appointments.trackpoint.domain.AppUser;
+import com.appointments.trackpoint.model.AppUserDTO;
+import com.appointments.trackpoint.repos.AppUserRepository;
 import com.appointments.trackpoint.util.NotFoundException;
 import java.util.List;
 import org.springframework.data.domain.Sort;
@@ -12,53 +12,53 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
 
-    public UserService(final UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(final AppUserRepository appUserRepository) {
+        this.appUserRepository = appUserRepository;
     }
 
-    public List<UserDTO> findAll() {
-        final List<User> users = userRepository.findAll(Sort.by("id"));
-        return users.stream()
-                .map(user -> mapToDTO(user, new UserDTO()))
+    public List<AppUserDTO> findAll() {
+        final List<AppUser> appUsers = appUserRepository.findAll(Sort.by("id"));
+        return appUsers.stream()
+                .map(user -> mapToDTO(user, new AppUserDTO()))
                 .toList();
     }
 
-    public UserDTO get(final Long id) {
-        return userRepository.findById(id)
-                .map(user -> mapToDTO(user, new UserDTO()))
+    public AppUserDTO get(final Long id) {
+        return appUserRepository.findById(id)
+                .map(user -> mapToDTO(user, new AppUserDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final UserDTO userDTO) {
-        final User user = new User();
-        mapToEntity(userDTO, user);
-        return userRepository.save(user).getId();
+    public Long create(final AppUserDTO appUserDTO) {
+        final AppUser appUser = new AppUser();
+        mapToEntity(appUserDTO, appUser);
+        return appUserRepository.save(appUser).getId();
     }
 
-    public void update(final Long id, final UserDTO userDTO) {
-        final User user = userRepository.findById(id)
+    public void update(final Long id, final AppUserDTO appUserDTO) {
+        final AppUser appUser = appUserRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(userDTO, user);
-        userRepository.save(user);
+        mapToEntity(appUserDTO, appUser);
+        appUserRepository.save(appUser);
     }
 
     public void delete(final Long id) {
-        userRepository.deleteById(id);
+        appUserRepository.deleteById(id);
     }
 
-    private UserDTO mapToDTO(final User user, final UserDTO userDTO) {
-        userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setPassword(user.getPassword());
-        return userDTO;
+    private AppUserDTO mapToDTO(final AppUser appUser, final AppUserDTO appUserDTO) {
+        appUserDTO.setId(appUser.getId());
+        appUserDTO.setUsername(appUser.getUsername());
+        appUserDTO.setPassword(appUser.getPassword());
+        return appUserDTO;
     }
 
-    private User mapToEntity(final UserDTO userDTO, final User user) {
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(userDTO.getPassword());
-        return user;
+    private AppUser mapToEntity(final AppUserDTO appUserDTO, final AppUser appUser) {
+        appUser.setUsername(appUserDTO.getUsername());
+        appUser.setPassword(appUserDTO.getPassword());
+        return appUser;
     }
 
 }

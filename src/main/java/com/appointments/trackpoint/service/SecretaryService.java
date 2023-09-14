@@ -1,10 +1,10 @@
 package com.appointments.trackpoint.service;
 
+import com.appointments.trackpoint.domain.AppUser;
 import com.appointments.trackpoint.domain.Secretary;
-import com.appointments.trackpoint.domain.User;
 import com.appointments.trackpoint.model.SecretaryDTO;
 import com.appointments.trackpoint.repos.SecretaryRepository;
-import com.appointments.trackpoint.repos.UserRepository;
+import com.appointments.trackpoint.repos.AppUserRepository;
 import com.appointments.trackpoint.util.NotFoundException;
 import java.util.List;
 import org.springframework.data.domain.Sort;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 public class SecretaryService {
 
     private final SecretaryRepository secretaryRepository;
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
 
     public SecretaryService(final SecretaryRepository secretaryRepository,
-            final UserRepository userRepository) {
+            final AppUserRepository appUserRepository) {
         this.secretaryRepository = secretaryRepository;
-        this.userRepository = userRepository;
+        this.appUserRepository = appUserRepository;
     }
 
     public List<SecretaryDTO> findAll() {
@@ -56,15 +56,15 @@ public class SecretaryService {
     private SecretaryDTO mapToDTO(final Secretary secretary, final SecretaryDTO secretaryDTO) {
         secretaryDTO.setId(secretary.getId());
         secretaryDTO.setName(secretary.getName());
-        secretaryDTO.setUser(secretary.getUser() == null ? null : secretary.getUser().getId());
+        secretaryDTO.setAppUser(secretary.getAppUser() == null ? null : secretary.getAppUser().getId());
         return secretaryDTO;
     }
 
     private Secretary mapToEntity(final SecretaryDTO secretaryDTO, final Secretary secretary) {
         secretary.setName(secretaryDTO.getName());
-        final User user = secretaryDTO.getUser() == null ? null : userRepository.findById(secretaryDTO.getUser())
+        final AppUser appUser = secretaryDTO.getAppUser() == null ? null : appUserRepository.findById(secretaryDTO.getAppUser())
                 .orElseThrow(() -> new NotFoundException("user not found"));
-        secretary.setUser(user);
+        secretary.setAppUser(appUser);
         return secretary;
     }
 
