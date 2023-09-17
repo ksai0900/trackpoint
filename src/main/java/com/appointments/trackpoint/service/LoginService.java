@@ -42,6 +42,7 @@ public class LoginService {
             if(doctor == null){
                 return null;
             }
+            authUserDTO.setId(doctor.getId());
             authUserDTO.setUsername(doctor.getAppUser().getUsername());
             authUserDTO.setName(doctor.getName());
             authUserDTO.setCategory("doctor");

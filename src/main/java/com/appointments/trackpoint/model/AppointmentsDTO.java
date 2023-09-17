@@ -2,12 +2,17 @@ package com.appointments.trackpoint.model;
 
 import jakarta.validation.constraints.Size;
 import java.time.OffsetDateTime;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AppointmentsDTO {
 
     private Long id;
@@ -19,9 +24,9 @@ public class AppointmentsDTO {
 
     private OffsetDateTime endDate;
 
-    private Long doctor;
+    private String doctor;
 
-    private Long customer;
-    private boolean confirmed;
+    private String customer;
+    private boolean appointment_completed;
 
 }

@@ -51,6 +51,6 @@ public class Appointments {
     private Customer customer;
 
     @Column
-    private boolean confirmed;
+    private boolean appointment_completed;
 
 }

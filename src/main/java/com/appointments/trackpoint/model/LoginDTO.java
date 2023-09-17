@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginDTOApp extends AppUserDTO {
+public class LoginDTO extends AppUserDTO {
     @JsonIgnore
     private Long id;
     private String role;
