@@ -27,3 +27,10 @@ spring:
       mode: always
 springdoc:
   pathsToMatch: /api/**
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          socket: DEBUG
+        messaging: DEBUG

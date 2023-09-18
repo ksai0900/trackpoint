@@ -1,5 +1,6 @@
 package com.appointments.trackpoint.service;
 
+import com.appointments.trackpoint.controller.WebSocketController;
 import com.appointments.trackpoint.domain.Appointments;
 import com.appointments.trackpoint.domain.Customer;
 import com.appointments.trackpoint.model.*;
@@ -10,11 +11,13 @@ import com.appointments.trackpoint.repos.specification.AppointmentsSpecification
 import com.appointments.trackpoint.service.interfaces.IAppointmentsService;
 import com.appointments.trackpoint.util.JwtUtility;
 import com.appointments.trackpoint.util.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,9 @@ import java.util.List;
 
 @Service
 public class AppointmentsService implements IAppointmentsService {
+    private final SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private WebSocketController webSocketController;
 
     private final AppointmentsRepository appointmentsRepository;
     private final DoctorRepository doctorRepository;
@@ -31,11 +37,14 @@ public class AppointmentsService implements IAppointmentsService {
     private final JwtUtility jwtUtility;
 
     public AppointmentsService(final AppointmentsRepository appointmentsRepository,
-                               final DoctorRepository doctorRepository, final CustomerRepository customerRepository, final JwtUtility jwtUtility) {
+                               final DoctorRepository doctorRepository, final CustomerRepository customerRepository, final JwtUtility jwtUtility,
+                               final SimpMessagingTemplate messagingTemplate) {
         this.appointmentsRepository = appointmentsRepository;
         this.doctorRepository = doctorRepository;
         this.customerRepository = customerRepository;
         this.jwtUtility = jwtUtility;
+        this.messagingTemplate = messagingTemplate;
+
     }
 
     public List<AppointmentsDTO> findAll() {
@@ -123,11 +132,19 @@ public class AppointmentsService implements IAppointmentsService {
     public Long create(final NewAppointmentDTO newAppointmentDTO, final String newCustomerName, final Long existingCustomer) {
         final Appointments newAppointment = new Appointments();
         mapToEntity(newAppointmentDTO, newAppointment, newCustomerName, existingCustomer);
+        Long appointmentId = appointmentsRepository.save(newAppointment).getId();
+
+        webSocketController.notifyNewAppointment();
 
 
-        return appointmentsRepository.save(newAppointment).getId();
+
+        return appointmentId;
     }
 
+    private void notifyNewAppointment(Appointments appointment) {
+        // For this example, we'll send the whole appointment. Adjust as needed.
+        messagingTemplate.convertAndSend("/newAppointments", appointment);
+    }
 /*    public void update(final Long id, final NewAppointmentDTO newAppointmentDTO) {
         final Appointments appointments = appointmentsRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
