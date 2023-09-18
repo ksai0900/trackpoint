@@ -1,4 +1,4 @@
-package com.appointments.trackpoint.rest;
+package com.appointments.trackpoint.controller;
 
 import com.appointments.trackpoint.model.DoctorDTO;
 import com.appointments.trackpoint.service.DoctorService;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/v1/doctors", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-public class DoctorResource {
+public class DoctorController {
 
     private final DoctorService doctorService;
 
-    public DoctorResource(final DoctorService doctorService) {
+    public DoctorController(final DoctorService doctorService) {
         this.doctorService = doctorService;
     }
 

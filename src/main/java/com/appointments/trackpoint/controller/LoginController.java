@@ -1,4 +1,4 @@
-package com.appointments.trackpoint.rest;
+package com.appointments.trackpoint.controller;
 
 import com.appointments.trackpoint.model.AuthUserDTO;
 import com.appointments.trackpoint.model.LoginDTO;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-public class LoginResource {
+public class LoginController {
 
     private final LoginService loginService;
 
-    public LoginResource(final LoginService loginService) {
+    public LoginController(final LoginService loginService) {
         this.loginService = loginService;
     }
 

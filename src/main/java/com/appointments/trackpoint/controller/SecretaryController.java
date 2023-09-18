@@ -1,4 +1,4 @@
-package com.appointments.trackpoint.rest;
+package com.appointments.trackpoint.controller;
 
 import com.appointments.trackpoint.model.SecretaryDTO;
 import com.appointments.trackpoint.service.SecretaryService;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/secretarys", produces = MediaType.APPLICATION_JSON_VALUE)
-public class SecretaryResource {
+public class SecretaryController {
 
     private final SecretaryService secretaryService;
 
-    public SecretaryResource(final SecretaryService secretaryService) {
+    public SecretaryController(final SecretaryService secretaryService) {
         this.secretaryService = secretaryService;
     }
 

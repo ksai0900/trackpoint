@@ -155,6 +155,12 @@ public class AppointmentsService implements IAppointmentsService {
     public void delete(final Long id) {
         appointmentsRepository.deleteById(id);
     }
+    public void complete(final Long id) {
+        final Appointments appointments = appointmentsRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+        appointments.setAppointment_completed(true);
+        appointmentsRepository.save(appointments);
+    }
 
     private AppointmentsDTO mapToDTO(final Appointments appointments) {
         final AppointmentsDTO appointmentsDTO = new AppointmentsDTO();

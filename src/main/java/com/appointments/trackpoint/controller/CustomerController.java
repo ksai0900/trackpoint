@@ -1,4 +1,4 @@
-package com.appointments.trackpoint.rest;
+package com.appointments.trackpoint.controller;
 
 import com.appointments.trackpoint.model.CustomerDTO;
 import com.appointments.trackpoint.service.CustomerService;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/v1/customers", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-public class CustomerResource {
+public class CustomerController {
 
     private final CustomerService customerService;
 
-    public CustomerResource(final CustomerService customerService) {
+    public CustomerController(final CustomerService customerService) {
         this.customerService = customerService;
     }
 

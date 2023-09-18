@@ -1,15 +1,12 @@
-package com.appointments.trackpoint.rest;
+package com.appointments.trackpoint.controller;
 
 import com.appointments.trackpoint.model.AppointmentsDTO;
 import com.appointments.trackpoint.model.NewAppointmentDTO;
 import com.appointments.trackpoint.model.PaginationResponse;
 import com.appointments.trackpoint.service.AppointmentsService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,13 +20,13 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/v1/appointments", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-public class AppointmentsResource {
+public class AppointmentsController {
 
     private final static Logger LOGGER = LoggerFactory
-            .getLogger(AppointmentsResource.class);
+            .getLogger(AppointmentsController.class);
     private final AppointmentsService appointmentsService;
 
-    public AppointmentsResource(final AppointmentsService appointmentsService) {
+    public AppointmentsController(final AppointmentsService appointmentsService) {
         this.appointmentsService = appointmentsService;
     }
 
@@ -98,6 +95,13 @@ public class AppointmentsResource {
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteAppointments(@PathVariable(name = "id") final Long id) {
         appointmentsService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    @ApiResponse(responseCode = "204")
+    public ResponseEntity<Void> completeAppointment(@PathVariable(name = "id") final Long id) {
+        appointmentsService.complete(id);
         return ResponseEntity.noContent().build();
     }
 

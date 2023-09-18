@@ -1,4 +1,4 @@
-package com.appointments.trackpoint.rest;
+package com.appointments.trackpoint.controller;
 
 import com.appointments.trackpoint.model.AppUserDTO;
 import com.appointments.trackpoint.service.UserService;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserResource {
+public class UserController {
 
     private final UserService userService;
 
-    public UserResource(final UserService userService) {
+    public UserController(final UserService userService) {
         this.userService = userService;
     }
 
