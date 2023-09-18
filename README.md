@@ -4,9 +4,9 @@
 
 To run Trackpoint there are a few software prerequisites required.
 
-Make sure gradle, nodejs and docker is installed.
+Make sure gradle, openjdk 17, nodejs and docker are installed.
 
-Test users
+### Test users
 
 Doctors: jdoe, doctorHodge, spielberg007, dlaw
 
