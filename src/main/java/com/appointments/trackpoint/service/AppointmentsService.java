@@ -1,10 +1,8 @@
 package com.appointments.trackpoint.service;
 
 import com.appointments.trackpoint.domain.Appointments;
-import com.appointments.trackpoint.model.AppointmentsDTO;
-import com.appointments.trackpoint.model.AuthUserDTO;
-import com.appointments.trackpoint.model.PaginationResponse;
-import com.appointments.trackpoint.model.PaginationResponseMeta;
+import com.appointments.trackpoint.domain.Customer;
+import com.appointments.trackpoint.model.*;
 import com.appointments.trackpoint.repos.AppointmentsRepository;
 import com.appointments.trackpoint.repos.CustomerRepository;
 import com.appointments.trackpoint.repos.DoctorRepository;
@@ -122,18 +120,20 @@ public class AppointmentsService implements IAppointmentsService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final AppointmentsDTO appointmentsDTO) {
-        final Appointments appointments = new Appointments();
-        mapToEntity(appointmentsDTO, appointments);
-        return appointmentsRepository.save(appointments).getId();
+    public Long create(final NewAppointmentDTO newAppointmentDTO, final String newCustomerName, final Long existingCustomer) {
+        final Appointments newAppointment = new Appointments();
+        mapToEntity(newAppointmentDTO, newAppointment, newCustomerName, existingCustomer);
+
+
+        return appointmentsRepository.save(newAppointment).getId();
     }
 
-    public void update(final Long id, final AppointmentsDTO appointmentsDTO) {
+/*    public void update(final Long id, final NewAppointmentDTO newAppointmentDTO) {
         final Appointments appointments = appointmentsRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(appointmentsDTO, appointments);
+        mapToEntity(newAppointmentDTO, appointments);
         appointmentsRepository.save(appointments);
-    }
+    }*/
 
     public void delete(final Long id) {
         appointmentsRepository.deleteById(id);
@@ -151,21 +151,33 @@ public class AppointmentsService implements IAppointmentsService {
         return appointmentsDTO;
     }
 
-    private Appointments mapToEntity(final AppointmentsDTO appointmentsDTO,
-                                     final Appointments appointments) {
-        appointments.setDescription(appointmentsDTO.getDescription());
-        appointments.setStartDate(appointmentsDTO.getStartDate());
-        appointments.setEndDate(appointmentsDTO.getEndDate());
+    private Appointments mapToEntity(final NewAppointmentDTO newAppointmentDTO,
+                                     final Appointments appointments,
+                                     final String newCustomerName,
+                                     final Long existingCustomer) {
+        appointments.setDescription(newAppointmentDTO.getDescription());
 
-/*        final Doctor doctor = appointmentsDTO.getDoctor() == null ? null : doctorRepository.findById(appointmentsDTO.getDoctor())
-                .orElseThrow(() -> new NotFoundException("doctor not found"));
+        appointments.setStartDate(newAppointmentDTO.getStartDate());
 
-        appointments.setDoctor(doctor);
+        Long appointmentMinutes = newAppointmentDTO.getDuration();
+        OffsetDateTime endDate = newAppointmentDTO.getStartDate().plusMinutes(appointmentMinutes);
 
-        final Customer customer = appointmentsDTO.getCustomer() == null ? null : customerRepository.findById(appointmentsDTO.getCustomer())
-                .orElseThrow(() -> new NotFoundException("customer not found"));
+        appointments.setEndDate(endDate);
+        appointments.setAppointment_completed(false);
+        appointments.setDoctor(doctorRepository.findById(newAppointmentDTO.getDoctor())
+                .orElseThrow(() -> new NotFoundException("doctor not found")));
 
-        appointments.setCustomer(customer);*/
+
+        if(newCustomerName != null ) {
+            Customer newCustomer = new Customer();
+            newCustomer.setName(newCustomerName);
+            appointments.setCustomer(customerRepository.save(newCustomer));
+        } else {
+            appointments.setCustomer(customerRepository.findById(existingCustomer)
+                    .orElseThrow(() -> new NotFoundException("customer not found")));
+        }
+
+
 
         return appointments;
     }

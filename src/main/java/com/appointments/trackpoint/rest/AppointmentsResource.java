@@ -1,6 +1,7 @@
 package com.appointments.trackpoint.rest;
 
 import com.appointments.trackpoint.model.AppointmentsDTO;
+import com.appointments.trackpoint.model.NewAppointmentDTO;
 import com.appointments.trackpoint.model.PaginationResponse;
 import com.appointments.trackpoint.service.AppointmentsService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -77,17 +78,21 @@ public class AppointmentsResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createAppointments(
-            @RequestBody @Valid final AppointmentsDTO appointmentsDTO) {
-        final Long createdId = appointmentsService.create(appointmentsDTO);
+            @RequestBody  NewAppointmentDTO appointment,
+            @RequestParam(required = false) String newCustomerName,
+            @RequestParam(required = false) Long existingCustomer) {
+        final Long createdId = appointmentsService.create(appointment, newCustomerName, existingCustomer);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+
+
+/*    @PutMapping("/{id}")
     public ResponseEntity<Long> updateAppointments(@PathVariable(name = "id") final Long id,
-                                                   @RequestBody @Valid final AppointmentsDTO appointmentsDTO) {
-        appointmentsService.update(id, appointmentsDTO);
+                                                   @RequestBody @Valid final NewAppointmentDTO newAppointmentDTO) {
+        appointmentsService.update(id, newAppointmentDTO);
         return ResponseEntity.ok(id);
-    }
+    }*/
 
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
